@@ -10,7 +10,6 @@ public class AirplaneTicket {
     private String customerId;
     private TicketStatus status;
 
-
     public AirplaneTicket(String id, Double price, String destination) {
         this.id = id;
         this.price = price;

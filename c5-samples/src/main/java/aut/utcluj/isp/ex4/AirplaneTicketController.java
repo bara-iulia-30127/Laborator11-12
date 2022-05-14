@@ -14,6 +14,7 @@ public class AirplaneTicketController {
      */
     public static final int DEFAULT_NUMBER_OF_TICKETS = 10;
     private final List<AirplaneTicket> tickets;
+ 
 
     public AirplaneTicketController() {
         this.tickets = new ArrayList<>();
@@ -57,7 +58,7 @@ public class AirplaneTicketController {
      * @return
      * @apiNote: this method should throw {@link NoTicketAvailableException} exception if ticket not found
      */
-    public AirplaneTicket getTicketDetails(final String ticketId) {
+    public AirplaneTicket getTicketDetails(final String ticketId) throws NoTicketAvailableException  {
         //throw new UnsupportedOperationException("Not supported yet.");
          for(AirplaneTicket t: tickets){
              if(t.getId().equals(ticketId)){
@@ -78,21 +79,32 @@ public class AirplaneTicketController {
      * {@link NoDestinationAvailableException} - if destination not supported by AirplaneTicketController
      * {@link NoTicketAvailableException} - if destination exists but no ticket with NEW status available
      */
-     public void buyTicket(final String destination, final String customerId) {
+     public void buyTicket(final String destination, final String customerId) throws NoDestinationAvailableException, NoTicketAvailableException{
         //throw new UnsupportedOperationException("Not supported yet.");
-        boolean ok = false;
+        boolean ok1 = false;
+        boolean ok2 = false;
          for(AirplaneTicket t: tickets){
-             if(t.getDestination().equals(destination) && t.getStatus() != TicketStatus.ACTIVE){
-                 t.setStatus(TicketStatus.ACTIVE);
-                 t.setCustomerId(customerId);
-                 ok = true;
-                 break;
+             if(t.getDestination().equals(destination)){
+                 
+                 ok1=true;
+                 
+                 if(t.getStatus()==TicketStatus.NEW){
+                     
+                    t.setStatus(TicketStatus.ACTIVE);
+                    t.setCustomerId(customerId);
+                    ok2 = true;
+                    break;
+                 }
+                 
              }
-             
          }
-         if(ok==false){
+         if(ok1==false){
+            throw new NoDestinationAvailableException();
+         }
+         if(ok2==false){
             throw new NoTicketAvailableException();
          }
+         
     }
          
         
@@ -107,7 +119,7 @@ public class AirplaneTicketController {
      * {@link NoTicketAvailableException} - if ticket with this id does not exist
      * {@link TicketNotAssignedException} - if ticket is not assigned to any user
      */
-    public void cancelTicket(final String ticketId) {
+    public void cancelTicket(final String ticketId) throws NoTicketAvailableException {
         //throw new UnsupportedOperationException("Not supported yet.");
         boolean ok = false;
          for(AirplaneTicket t: tickets){
@@ -131,7 +143,7 @@ public class AirplaneTicketController {
      * {@link NoTicketAvailableException} - if ticket with this id does not exist
      * {@link TicketNotAssignedException} - if ticket is not assigned to any user
      */
-    public void changeTicketCustomerId(final String ticketId, final String customerId) {
+    public void changeTicketCustomerId(final String ticketId, final String customerId) throws NoTicketAvailableException {
         //throw new UnsupportedOperationException("Not supported yet.");
         boolean ok = false;
         for(AirplaneTicket t: tickets){
@@ -174,47 +186,29 @@ public class AirplaneTicketController {
      * @return dictionary where the key is the customer name and the value is a list of tickets for that customer
      * @apiNote: only tickets with available name should be returned
      */
-        public static boolean customCompare(String x, String y){
-        if(x==null || y==null){
-            return false;
-        }
-        //compare lengths
-        if(x.length()!=y.length())
-            return false;
- 
-        //compare all characters
-        for (int i = 0; i <x.length() ; i++) {
-            if(x.charAt(i)!=y.charAt(i))
-                return false;
-        }
-        //if here, means both strings are equal
-        return true;
-    }
+        
         
     public Map<String, List<AirplaneTicket>> groupTicketsByCustomerId() {
         //throw new UnsupportedOperationException("Not supported yet.");
         Map<String, List<AirplaneTicket>> result = new HashMap<>();
         List<String> customers = new ArrayList<>(); 
-       
         for(AirplaneTicket t: tickets){
-           
-                if(!customers.contains(t.getCustomerId())){
-                
-                    customers.add(t.getCustomerId());
-                    
-                    List<AirplaneTicket> custTickets = new ArrayList<>();
-                    
-                for(AirplaneTicket t1 : tickets){
-                    if(customCompare(t1.getCustomerId(),t.getCustomerId())){
-                        custTickets.add(t1);
+            String key = t.getCustomerId();
+            if(!(customers.contains(key))){
+                customers.add(key);
+                List<AirplaneTicket> custTickets = new ArrayList<>();
+                for(AirplaneTicket t2 : tickets){
+                    if(t2.getCustomerId()!=null){
+                        
+                        if(t2.getCustomerId().equals(key)){
+                            custTickets.add(t2);
+                        }
                     }
                 }
-                result.put(t.getCustomerId(), custTickets);
+                result.put(key, custTickets);
             }
-      
+                
         }
         return result;
     }
-    
-
 }
