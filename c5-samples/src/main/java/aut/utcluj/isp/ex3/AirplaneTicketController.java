@@ -1,15 +1,17 @@
 package aut.utcluj.isp.ex3;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * @author stefan
  */
 public class AirplaneTicketController {
-    private List<AirplaneTicket> tickets;
+    private final List<AirplaneTicket> tickets;
 
     public AirplaneTicketController() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        //throw new UnsupportedOperationException("Not supported yet.");
+        tickets = new ArrayList<>();
     }
 
     /**
@@ -18,7 +20,8 @@ public class AirplaneTicketController {
      * @param airplaneTicket - airplane ticket object
      */
     public void addNewTicket(final AirplaneTicket airplaneTicket) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        //throw new UnsupportedOperationException("Not supported yet.");
+        tickets.add(airplaneTicket);
     }
 
     /**
@@ -27,14 +30,16 @@ public class AirplaneTicketController {
      * @return
      */
     public List<AirplaneTicket> getTickets() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        //throw new UnsupportedOperationException("Not supported yet.");
+        return tickets;
     }
 
     /**
      * Return total number of tickets
      */
     public int getTotalNumberOfTickets() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        //throw new UnsupportedOperationException("Not supported yet.");
+        return tickets.size();
     }
 
     /**
@@ -43,7 +48,13 @@ public class AirplaneTicketController {
      * @param ticketId - unique ticket id
      */
     public void removeTicketById(final String ticketId) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        //throw new UnsupportedOperationException("Not supported yet.");
+        for(AirplaneTicket t: tickets){
+            if(t.getId().equals(ticketId)){
+                        tickets.remove(t);
+
+            }
+        }
     }
 
     /**
@@ -53,7 +64,12 @@ public class AirplaneTicketController {
      * @param destination - new destination
      */
     public void updateTicketDestination(final String ticketId, final String destination) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        //throw new UnsupportedOperationException("Not supported yet.");
+        for(AirplaneTicket t: tickets){
+            if(t.getId().equals(ticketId)){
+               t.setDestination(destination);
+            }
+        }
     }
 
     /**
@@ -64,7 +80,14 @@ public class AirplaneTicketController {
      * @return
      */
     public List<AirplaneTicket> filterTicketsBetweenMinMaxPrice(final Double minPrice, final Double maxPrice) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        //throw new UnsupportedOperationException("Not supported yet.");
+        List<AirplaneTicket> result = new ArrayList<>();
+        for(AirplaneTicket t: tickets){
+            if(t.getPrice()>= minPrice && t.getPrice()<= maxPrice){
+                result.add(t);
+            }
+        }
+        return result;
     }
 
     /**
@@ -76,6 +99,13 @@ public class AirplaneTicketController {
      * @return
      */
     public List<AirplaneTicket> filterTicketsWithPriceAndDestination(final Double minPrice, final Double maxPrice, final String destination) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        //throw new UnsupportedOperationException("Not supported yet.");
+    List<AirplaneTicket> result = new ArrayList<>();
+        for(AirplaneTicket t: tickets){
+            if(t.getPrice()>= minPrice && t.getPrice()<= maxPrice && t.getDestination().equals(destination)){
+                result.add(t);
+            }
+        }
+        return result;
     }
 }
