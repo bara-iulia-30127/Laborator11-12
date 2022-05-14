@@ -1,7 +1,5 @@
 package aut.utcluj.isp.ex4;
 
-
-import static java.lang.System.exit;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -15,7 +13,7 @@ public class AirplaneTicketController {
      * Default number of tickets when a new instance is created
      */
     public static final int DEFAULT_NUMBER_OF_TICKETS = 10;
-    private List<AirplaneTicket> tickets;
+    private final List<AirplaneTicket> tickets;
 
     public AirplaneTicketController() {
         this.tickets = new ArrayList<>();
@@ -80,7 +78,7 @@ public class AirplaneTicketController {
      * {@link NoDestinationAvailableException} - if destination not supported by AirplaneTicketController
      * {@link NoTicketAvailableException} - if destination exists but no ticket with NEW status available
      */
-    public void buyTicket(final String destination, final String customerId) {
+     public void buyTicket(final String destination, final String customerId) {
         //throw new UnsupportedOperationException("Not supported yet.");
         boolean ok = false;
          for(AirplaneTicket t: tickets){
@@ -96,7 +94,8 @@ public class AirplaneTicketController {
             throw new NoTicketAvailableException();
          }
     }
-    
+         
+        
 
     /**
      * Cancel specific ticket
@@ -141,7 +140,7 @@ public class AirplaneTicketController {
                     throw new TicketNotAssignedException();
                 } 
                 t.setCustomerId(customerId);
-                ok =true;
+                ok =true  ;
                  
             }
       
@@ -175,23 +174,47 @@ public class AirplaneTicketController {
      * @return dictionary where the key is the customer name and the value is a list of tickets for that customer
      * @apiNote: only tickets with available name should be returned
      */
+        public static boolean customCompare(String x, String y){
+        if(x==null || y==null){
+            return false;
+        }
+        //compare lengths
+        if(x.length()!=y.length())
+            return false;
+ 
+        //compare all characters
+        for (int i = 0; i <x.length() ; i++) {
+            if(x.charAt(i)!=y.charAt(i))
+                return false;
+        }
+        //if here, means both strings are equal
+        return true;
+    }
+        
     public Map<String, List<AirplaneTicket>> groupTicketsByCustomerId() {
         //throw new UnsupportedOperationException("Not supported yet.");
         Map<String, List<AirplaneTicket>> result = new HashMap<>();
         List<String> customers = new ArrayList<>(); 
+       
         for(AirplaneTicket t: tickets){
-            if(!customers.contains(t.getCustomerId())){
-                customers.add(t.getCustomerId());
-                List<AirplaneTicket> custTickets = new ArrayList<>();
-                for(AirplaneTicket t2 : tickets){
-                    if(t2.getCustomerId().equals(t.getCustomerId())){
-                        custTickets.add(t2);
+           
+                if(!customers.contains(t.getCustomerId())){
+                
+                    customers.add(t.getCustomerId());
+                    
+                    List<AirplaneTicket> custTickets = new ArrayList<>();
+                    
+                for(AirplaneTicket t1 : tickets){
+                    if(customCompare(t1.getCustomerId(),t.getCustomerId())){
+                        custTickets.add(t1);
                     }
                 }
                 result.put(t.getCustomerId(), custTickets);
             }
-                
+      
         }
         return result;
     }
+    
+
 }
