@@ -8,4 +8,4 @@ Group repository for lab 11.
 ![Class Diagram](docs/ClassDiagram.png)
 
 ## Class Diagram for exercise 4
-![Class Diagram](docs/ex4.png)
+![Class Diagram](docs/Ex4.png)
